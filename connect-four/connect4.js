@@ -132,7 +132,10 @@ function checkForWin() {
     );
   }
 
-  // TODO: read and understand this code. Add comments to help you.
+  // For each position in the table, check four sets around it
+  // The sets are to the right, down, down-right, and down-left
+  // If any are a winning set, return true
+  // Side note: currently reads out-of-bounds
 
   for (var y = 0; y < HEIGHT; y++) {
     for (var x = 0; x < WIDTH; x++) {
