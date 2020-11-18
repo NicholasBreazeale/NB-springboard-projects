@@ -16,13 +16,13 @@ const board = []; // array of rows, each row is array of cells  (board[y][x])
  */
 
 function makeBoard() {
-	const subarr = [];
-	for (let i = 0; i < WIDTH; i++) {
-		subarr.push(null);
-	}
-	for (let i = 0; i < HEIGHT; i++) {
-		board.push([...subarr]);
-	}
+  const subarr = [];
+  for (let i = 0; i < WIDTH; i++) {
+    subarr.push(null);
+  }
+  for (let i = 0; i < HEIGHT; i++) {
+    board.push([...subarr]);
+  }
 }
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
