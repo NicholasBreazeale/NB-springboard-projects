@@ -108,7 +108,7 @@ function handleClick(evt) {
   }
 
   // check for tie
-  board.each(row => row.each(col => col !== null));
+  board.every(row => row.every(col => col !== null));
 
   // switch players
   currPlayer ^= 3;
