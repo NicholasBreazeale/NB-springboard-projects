@@ -57,8 +57,19 @@ function makeHtmlBoard() {
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
 function findSpotForCol(x) {
-  // TODO: write the real version of this, rather than always returning 0
-  return 0;
+  // No spot available, return null
+  if (board[0][x] !== null) {
+    return null;
+  }
+
+  // Find the first instance of a piece and then return the row before it
+  for (let i = 1; i < HEIGHT; i++) {
+    if (board[i][x] !== null) {
+      return i-1;
+    }
+  }
+  // No piece found, use the last row
+  return HEIGHT-1;
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
