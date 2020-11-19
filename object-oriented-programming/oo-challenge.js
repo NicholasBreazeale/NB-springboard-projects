@@ -11,3 +11,10 @@ class Vehicle {
 		return `The vehicle is a ${this.make} ${this.model} from ${this.year}.`;
 	}
 }
+
+class Car extends Vehicle {
+	constructor(make, model, year) {
+		this.numWheels = 4;
+		super(make, model, year);
+	}
+}
