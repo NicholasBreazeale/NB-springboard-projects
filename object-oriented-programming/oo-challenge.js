@@ -18,3 +18,13 @@ class Car extends Vehicle {
 		super(make, model, year);
 	}
 }
+
+class Motorcycle extends Vehicle {
+	constructor(make, model, year) {
+		this.numWheels = 2;
+		super(make, model, year);
+	}
+	revEngine() {
+		return "VROOM!!!";
+	}
+}
