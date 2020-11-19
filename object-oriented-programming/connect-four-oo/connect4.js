@@ -137,4 +137,8 @@ class Game {
 	}
 }
 
-let game = new Game(6,7);
+document.getElementById("startBtn").addEventListener("click", (event) => {
+	document.getElementById("board").innerHTML = "";
+	event.target.value = "Restart";
+	new Game(6, 7);
+});
