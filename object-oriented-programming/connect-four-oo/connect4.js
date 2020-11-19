@@ -11,6 +11,8 @@ class Game {
 		this.width = width;
 		this.currPlayer = 1;
 		this.board = [];
+		this.gameEnd = false;
+
 		this.makeBoard();
 		this.makeHtmlBoard();
 	}
@@ -77,6 +79,10 @@ class Game {
 	}
 	/** handle click of column top to play piece */
 	handleClick(evt) {
+		if (gameEnd) {
+			return;
+		}
+
 		// get x from ID of clicked cell
 		const x = +evt.target.id;
 
@@ -92,11 +98,13 @@ class Game {
 
 		// check for win
 		if (this.checkForWin()) {
+			gameEnd = true;
 			return this.endGame(`Player ${this.currPlayer} won!`);
 		}
 
 		// check for tie
 		if (this.board.every(row => row.every(cell => cell))) {
+			gameEnd = true;
 			return this.endGame("Tie!");
 		}
 
