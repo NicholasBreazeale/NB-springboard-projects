@@ -74,7 +74,26 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script>
-  // Add your code here!
+  console.log("Let's get ready to party with jQuery!");
+
+  $("article img").addClass("image-center");
+
+  $("article p:last-child").remove();
+
+  $("#title").css("font-size", Math.floor(Math.random()*101) + "px");
+
+  $("ol").append("<li>Foo bar.</li>");
+
+  $("aside").html("<p>Friendship ended with lists, now paragraphs are my best friend.</p>");
+
+  $(".row.mb-5").on("input", event => {
+    let colors = $(".row.mb-5 input");
+    $("body").css("background-color", `rgb(${colors.eq(0).val()}, ${colors.eq(2).val()}, ${colors.eq(1).val()})`);
+  });
+
+  $("img").on("click", event => {
+    $("img").remove();
+  });
 </script>
 </body>
 
