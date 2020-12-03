@@ -32,6 +32,7 @@ function populateShows(shows) {
   $showsList.empty();
 
   for (let show of shows) {
+    const imgSrc = show.image !== null ? show.image.original : "https://tinyurl.com/tv-missing";
     let $item = $(
       `<div class="col-md-6 col-lg-3 Show" data-show-id="${show.id}">
          <div class="card" data-show-id="${show.id}">
@@ -39,6 +40,7 @@ function populateShows(shows) {
              <h5 class="card-title">${show.name}</h5>
              <p class="card-text">${show.summary}</p>
            </div>
+		   <img class="card-img-top" src="${imgSrc}">
          </div>
        </div>
       `);
