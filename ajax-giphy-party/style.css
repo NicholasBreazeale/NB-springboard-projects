@@ -3,9 +3,26 @@ body {
 	color: white;
 	text-align: center;
 }
-
 input {
 	border: none;
 	border-radius: 3px;
 	padding: 7px 10px;
+}
+form {
+	display: inline-block;
+}
+img {
+	margin: 3px;
+}
+
+#submitBtn {
+	background-color: #444;
+	color: white;
+}
+#removeBtn {
+	background-color: red;
+	color: white;
+}
+#giphs {
+	text-align: initial;
 }

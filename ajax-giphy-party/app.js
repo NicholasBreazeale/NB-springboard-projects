@@ -1,4 +1,4 @@
-async function searchGiphy(event) {
+document.getElementById("searchForm").addEventListener("submit", async event => {
 	event.preventDefault();
 
 	let searchQ = document.getElementById("searchQ");
@@ -13,6 +13,8 @@ async function searchGiphy(event) {
 
 	// Clear form
 	searchQ.value = "";
-}
+});
 
-document.getElementById("searchForm").addEventListener("submit", searchGiphy);
+document.getElementById("removeBtn").addEventListener("click", () => {
+	document.getElementById("giphs").innerHTML = "";
+});
