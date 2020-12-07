@@ -1,7 +1,46 @@
-/* some colors you may find useful:
-  #115ff4
-  #060ce9
-  #28a200
-  #8d2ab5
-  #74119c
-*/
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+* {
+	color: white;
+	text-align: center;
+}
+body {
+	background-color: #115ff4;
+}
+th, td {
+	border: 1px solid white;
+	padding: 10px;
+}
+td {
+	cursor: pointer;
+}
+
+#reStartBtn {
+	background-color: #8d2ab5;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	padding: 10px 35px;
+}
+#reStartBtn:hover {
+	background-color: #74119c;
+}
+
+#loadingView {
+	animation: spin 2s linear infinite;
+	display: none;
+	margin: 10px auto;
+	max-width: 300px;
+	min-width: 150px;
+}
+
+#gameBoard {
+	background-color: #060ce9;
+	border-collapse: collapse;
+	display: none;
+	margin: 10px auto;
+}
+.answered {
+	background-color: #28a200;
+	cursor: not-allowed;
+}
