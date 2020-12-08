@@ -1,3 +1,14 @@
+// Implement the Fisher-Yates shuffle algorithm for arrays
+Object.defineProperty(Array.prototype, "shuffle", {
+	value: function() {
+		for (let i = this.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[this[i], this[j]] = [this[j], this[i]];
+		}
+		return this;
+	}
+});
+
 // categories is the main data structure for the app; it looks like this:
 
 //  [
@@ -50,8 +61,14 @@ async function getCategoryIds() {
  */
 
 async function getCategory(catId) {
-	let jData = (await axios.get(`http://jservice.io/api/category?id=${catId}`)).data;
-	return {title: jData.title, clues: jData.clues.map(value => ({question: value.question, answer: value.answer, showing: null}))};
+	const jData = (await axios.get(`http://jservice.io/api/category?id=${catId}`)).data;
+	jData.clues.shuffle();
+	const catObj = {title: jData.title, clues: []};
+	for (let i = 0; i < 5; i++) {
+		const clue = jData.clues[i];
+		catObj.clues.push({question: clue.question, answer: clue.answer, showing: null});
+	}
+	return catObj;
 }
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
@@ -67,7 +84,8 @@ function fillTable() {
 	for (let i = 0; i < NUM_CATEGORIES; i++) {
 		gameBoard.children[0].children[0].children[i].innerText = categories[i].title;
 		for (let j = 0; j < 5; j++) {
-			gameBoard.children[1].children[j].children[i].innerText = "???";
+			gameBoard.children[1].children[j].children[i].innerText = "?";
+			gameBoard.children[1].children[j].children[i].classList = "";
 		}
 	}
 }
