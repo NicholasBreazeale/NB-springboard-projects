@@ -58,6 +58,31 @@ $(async function() {
   });
 
   /**
+   * Event listener for adding new stories
+   *  If successfully we will prepend the new story to the DOM
+   */
+
+  $submitForm.on("submit", async function(evt) {
+    evt.preventDefault();
+
+    // grab the required fields
+    const story = {
+      author: $("#author").val(),
+      title: $("#title").val(),
+      url: $("#url").val()
+    };
+
+    // submit the story to the API and display the result
+    const newStory = await storyList.addStory(currentUser, story);
+    $allStoriesList.unshift(newStory);
+
+    // clear inputs once the new story is displayed
+    $("#author").val("");
+    $("#title").val("");
+    $("#url").val("");
+  });
+
+  /**
    * Log Out Functionality
    */
 
@@ -106,6 +131,7 @@ $(async function() {
     await generateStories();
 
     if (currentUser) {
+      $submitForm.show();
       showNavForLoggedInUser();
     }
   }
@@ -125,6 +151,9 @@ $(async function() {
 
     // show the stories
     $allStoriesList.show();
+
+    // show the submit form
+    $submitForm.show();
 
     // update the navigation bar
     showNavForLoggedInUser();
