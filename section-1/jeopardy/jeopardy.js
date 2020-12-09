@@ -39,13 +39,24 @@ let categories = [];
  */
 
 async function getCategoryIds() {
-	return (await axios.get(`http://jservice.io/api/random?count=${NUM_CATEGORIES*5-4}`)).data.reduce(function(accumulator, value) {
-		let catId = value.category.id;
-		if (accumulator.length < NUM_CATEGORIES && !accumulator.includes(catId)) {
-			accumulator.push(catId);
+	const catIds = [];
+	do {
+		const jServiceRandom = await axios.get(`http://jservice.io/api/random?count=${NUM_CATEGORIES-catIds.length}`);
+
+		// Throw an error if the status code is anything other than 200
+		if (jServiceRandom.status !== 200) {
+			throw `jService error: ${jServiceRandom.status} - ${jServiceRandom.statusText}`;
 		}
-		return accumulator;
-	}, []);
+
+		// Parse random clue data and extract their category IDs
+		for (const clue of jServiceRandom.data) {
+			// Only add unique IDs to array
+			if (!catIds.includes(clue.category_id)) {
+				catIds.push(clue.category_id);
+			}
+		}
+	} while (catIds.length < NUM_CATEGORIES);
+	return catIds;
 }
 
 /** Return object with data about a category:
@@ -61,14 +72,23 @@ async function getCategoryIds() {
  */
 
 async function getCategory(catId) {
-	const jData = (await axios.get(`http://jservice.io/api/category?id=${catId}`)).data;
-	jData.clues.shuffle();
-	const catObj = {title: jData.title, clues: []};
-	for (let i = 0; i < 5; i++) {
-		const clue = jData.clues[i];
-		catObj.clues.push({question: clue.question, answer: clue.answer, showing: null});
+	const jServiceCategory = await axios.get(`http://jservice.io/api/category?id=${catId}`);
+
+	// Throw an error if the status code is anything other than 200
+	if (jServiceCategory.status !== 200) {
+		throw `jService error: ${jServiceRandom.status} - ${jServiceRandom.statusText}`;
 	}
-	return catObj;
+
+	// Randomize clue order
+	jServiceCategory.data.clues.shuffle();
+	// Extract the category title
+	const category = {title: jServiceCategory.data.title, clues: []};
+	// Extract and format the first 5 clues from jServiceCategory
+	for (let i = 0; i < 5; i++) {
+		const clue = jServiceCategory.data.clues[i];
+		category.clues.push({question: clue.question, answer: clue.answer, showing: null});
+	}
+	return category;
 }
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
@@ -81,13 +101,34 @@ async function getCategory(catId) {
 
 function fillTable() {
 	let gameBoard = document.getElementById("gameBoard");
-	for (let i = 0; i < NUM_CATEGORIES; i++) {
-		gameBoard.children[0].children[0].children[i].innerText = categories[i].title;
-		for (let j = 0; j < 5; j++) {
-			gameBoard.children[1].children[j].children[i].innerText = "?";
-			gameBoard.children[1].children[j].children[i].classList = "";
-		}
+	gameBoard.innerHTML = "";
+
+	// Fill table head
+	const thead = document.createElement("thead");
+	const theadRow = document.createElement("tr");
+	for (const category of categories) {
+		const th = document.createElement("th");
+		th.innerText = category.title;
+		theadRow.appendChild(th);
 	}
+	thead.appendChild(theadRow);
+
+	// Fill table body
+	const tbody = document.createElement("tbody");
+	for (let i = 0; i < 5; i++) {
+		const row = document.createElement("tr");
+		for (let j = 0; j < NUM_CATEGORIES; j++) {
+			const cell = document.createElement("td");
+			cell.id = `${j}-${i}`;
+			cell.innerHTML = "?";
+			row.appendChild(cell);
+		}
+		tbody.appendChild(row);
+	}
+
+	// Append table contents
+	gameBoard.appendChild(thead);
+	gameBoard.appendChild(tbody);
 }
 
 /** Handle clicking on a clue: show the question or answer.
@@ -99,6 +140,10 @@ function fillTable() {
  * */
 
 function handleClick(evt) {
+	if (evt.target.tagName !== "TD") {
+		return;
+	}
+
 	const [x, y] = evt.target.id.split("-").map(val => Number(val));
 	const clue = categories[x].clues[y];
 	switch (clue.showing) {
@@ -149,11 +194,16 @@ async function setupAndStart() {
 
 document.getElementById("reStartBtn").addEventListener("click", async () => {
 	showLoadingView();
-	await setupAndStart();
+	try {
+		await setupAndStart();
+	} catch (error) {
+		alert(error);
+		return;
+	}
 	hideLoadingView();
 	document.getElementById("reStartBtn").value = "Restart!";
 });
 
 /** On page load, add event handler for clicking clues */
 
-document.getElementById("gameBoard").children[1].addEventListener("click", handleClick);
+document.getElementById("gameBoard").addEventListener("click", handleClick);
