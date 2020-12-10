@@ -2,6 +2,7 @@ $(async function() {
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
   const $submitForm = $("#submit-form");
+  const $favoritedArticles = $("#favorited-articles");
   const $filteredArticles = $("#filtered-articles");
   const $loginForm = $("#login-form");
   const $createAccountForm = $("#create-account-form");
@@ -115,6 +116,63 @@ $(async function() {
   });
 
   /**
+   * Favorite a story by double clicking on it in the story list
+   */
+
+  $allStoriesList.on("dblclick", async function(evt) {
+    // backtrack to the root LI element of of the event target
+    let rootElem = evt.target;
+    while (rootElem.tagName !== "LI") {
+      rootElem = rootElem.parentElement;
+    }
+
+    // submit the ID to the favorites list
+    await currentUser.favoriteStory(rootElem.id);
+
+    generateFavoriteStories();
+  });
+
+  /**
+   * Unfavorite a story by double clicking on it in the favorites list
+   */
+
+  $favoritedArticles.on("dblclick", async function(evt) {
+    // backtrack to the root LI element of of the event target
+    let rootElem = evt.target;
+    while (rootElem.tagName !== "LI") {
+      rootElem = rootElem.parentElement;
+    }
+
+    // submit the ID to the favorites list
+    await currentUser.unfavoriteStory(rootElem.id);
+
+    generateFavoriteStories();
+  });
+
+  /**
+   * Render the favorited stories
+   */
+
+  function generateFavoriteStories() {
+    // empty out the favorited list
+    $favoritedArticles.empty();
+
+    // only display the section if the current user has favorited articles
+    if (currentUser.favorites.length === 0) {
+      $favoritedArticles.hide();
+      return;
+    } else {
+      $favoritedArticles.show();
+    }
+
+    // populate the list
+    for (let story of currentUser.favorites) {
+      const result = generateStoryHTML(story);
+      $favoritedArticles.append(result);
+    }
+  }
+
+  /**
    * On page load, checks local storage to see if the user is already logged in.
    * Renders page information accordingly.
    */
@@ -131,6 +189,7 @@ $(async function() {
     await generateStories();
 
     if (currentUser) {
+      generateFavoriteStories();
       $submitForm.show();
       showNavForLoggedInUser();
     }
@@ -154,6 +213,9 @@ $(async function() {
 
     // show the submit form
     $submitForm.show();
+
+    // show favorited stories if the user has any
+    generateFavoriteStories();
 
     // update the navigation bar
     showNavForLoggedInUser();

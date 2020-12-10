@@ -158,6 +158,34 @@ class User {
     existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
     return existingUser;
   }
+
+  /**
+   * Favorite a story
+   */
+
+  async favoriteStory(storyId) {
+    const response = await axios.post(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, {
+      token: this.loginToken
+    });
+
+    this.favorites = response.data.user.favorites.map(s => new Story(s));
+  }
+
+  /**
+   * Unfavorite a story
+   */
+
+  async unfavoriteStory(storyId) {
+    const response = await axios({
+      method: "delete",
+      url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
+      data: {
+        token: this.loginToken
+      }
+    });
+
+    this.favorites = response.data.user.favorites.map(s => new Story(s));
+  }
 }
 
 /**
