@@ -75,7 +75,9 @@ $(async function() {
 
     // submit the story to the API and display the result
     const newStory = await storyList.addStory(currentUser, story);
-    $allStoriesList.unshift(newStory);
+    const storyMarkup = generateStoryHTML(newStory);
+    storyMarkup.prepend($('<button class="star">★</button><button class="trash-can">🗑</button>'));
+    $allStoriesList.prepend(storyMarkup);
 
     // clear inputs once the new story is displayed
     $("#author").val("");
@@ -135,6 +137,12 @@ $(async function() {
     await currentUser.unfavoriteStory(evt.target.parentElement.id);
 
     generateFavoriteStories();
+  });
+
+  $allStoriesList.on("click", ".trash-can", async function(evt) {
+    currentUser.deleteStory(evt.target.parentElement.id);
+
+    evt.target.parentElement.remove();
   });
 
   /**
@@ -226,6 +234,9 @@ $(async function() {
     // loop through all of our stories and generate HTML for them
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
+      if (currentUser.ownsStory(result[0].id)) {
+        result.prepend($('<button class="trash-can">🗑</button>'));
+      }
       result.prepend($('<button class="star">★</button>'));
       $allStoriesList.append(result);
     }

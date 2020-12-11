@@ -186,6 +186,35 @@ class User {
 
     this.favorites = response.data.user.favorites.map(s => new Story(s));
   }
+
+  /**
+   * Delete a story
+   */
+
+  async deleteStory(storyId) {
+    const response = await axios({
+      method: "delete",
+      url: `${BASE_URL}/stories/${storyId}`,
+      data: {
+        token: this.loginToken
+      }
+    });
+
+	this.ownStories.splice(this.ownStories.findIndex(element => element.id === storyId), 1);
+  }
+
+  /**
+   * Check to see if the user owns a given story
+   */
+
+  ownsStory(storyId) {
+    for (const story of this.ownStories) {
+      if (story.storyId === storyId) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 /**
