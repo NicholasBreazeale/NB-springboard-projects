@@ -116,35 +116,23 @@ $(async function() {
   });
 
   /**
-   * Favorite a story by double clicking on it in the story list
+   * Favorite a story by clicking the star button to its right
    */
 
-  $allStoriesList.on("dblclick", async function(evt) {
-    // backtrack to the root LI element of of the event target
-    let rootElem = evt.target;
-    while (rootElem.tagName !== "LI") {
-      rootElem = rootElem.parentElement;
-    }
-
+  $allStoriesList.on("click", ".star", async function(evt) {
     // submit the ID to the favorites list
-    await currentUser.favoriteStory(rootElem.id);
+    await currentUser.favoriteStory(evt.target.parentElement.id);
 
     generateFavoriteStories();
   });
 
   /**
-   * Unfavorite a story by double clicking on it in the favorites list
+   * Unfavorite a story by clicking the x button to its right
    */
 
-  $favoritedArticles.on("dblclick", async function(evt) {
-    // backtrack to the root LI element of of the event target
-    let rootElem = evt.target;
-    while (rootElem.tagName !== "LI") {
-      rootElem = rootElem.parentElement;
-    }
-
+  $favoritedArticles.on("click", ".xmark", async function(evt) {
     // submit the ID to the favorites list
-    await currentUser.unfavoriteStory(rootElem.id);
+    await currentUser.unfavoriteStory(evt.target.parentElement.id);
 
     generateFavoriteStories();
   });
@@ -168,6 +156,7 @@ $(async function() {
     // populate the list
     for (let story of currentUser.favorites) {
       const result = generateStoryHTML(story);
+      result.prepend($('<button class="xmark">🗙</button>'));
       $favoritedArticles.append(result);
     }
   }
@@ -237,6 +226,7 @@ $(async function() {
     // loop through all of our stories and generate HTML for them
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
+      result.prepend($('<button class="star">★</button>'));
       $allStoriesList.append(result);
     }
   }

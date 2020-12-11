@@ -145,12 +145,14 @@ form > hr {
   cursor: pointer;
 }
 
+.xmark,
 .star,
 .trash-can,
 .pencil {
   font-size: 0.75rem;
   margin: 0 2px;
   cursor: pointer;
+  float: right;
 }
 
 .trash-can:hover {
