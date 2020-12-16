@@ -1,6 +1,8 @@
-def print_upper_words(wordList):
-	"""Print out a list of words, each on separate lines, and all uppercase"""
+def print_upper_words(wordList, must_start_with):
+	"""Print out a list of words if they start with a specific letter, each on separate lines, and all uppercase"""
 
 	for word in wordList:
-		if word[0] == "e" or word[0] == "E":
-			print(word.upper())
+		for letter in must_start_with:
+			if word[0] == letter[0]:
+				print(word.upper())
+				break
