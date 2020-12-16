@@ -189,6 +189,7 @@ $(async function() {
       generateFavoriteStories();
       $submitForm.show();
       showNavForLoggedInUser();
+      showProfleInfo();
     }
   }
 
@@ -204,6 +205,9 @@ $(async function() {
     // reset those forms
     $loginForm.trigger("reset");
     $createAccountForm.trigger("reset");
+
+    // show the user's account info
+    showProfleInfo();
 
     // show the stories
     $allStoriesList.show();
@@ -234,10 +238,12 @@ $(async function() {
     // loop through all of our stories and generate HTML for them
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
-      if (currentUser.ownsStory(result[0].id)) {
-        result.prepend($('<button class="trash-can">🗑</button>'));
+      if (currentUser !== null) {
+        if (currentUser.ownsStory(result[0].id)) {
+          result.prepend($('<button class="trash-can">🗑</button>'));
+        }
+        result.prepend($('<button class="star">★</button>'));
       }
-      result.prepend($('<button class="star">★</button>'));
       $allStoriesList.append(result);
     }
   }
@@ -262,6 +268,14 @@ $(async function() {
     `);
 
     return storyMarkup;
+  }
+
+  /* display user info at the bottom of the page */
+
+  function showProfleInfo() {
+    $("#profile-name").append(" " + currentUser.name);
+    $("#profile-username").append(" " + currentUser.username);
+    $("#profile-account-date").append(" " + currentUser.createdAt);
   }
 
   /* hide all elements in elementsArr */
