@@ -11,3 +11,10 @@ def mode(nums):
         >>> mode([2, 2, 3, 3, 2])
         2
     """
+    num_count = {}
+    for num in nums:
+        if num not in num_count:
+            num_count[num] = 1
+        else:
+            num_count[num] += 1
+    return sorted(num_count, key=num_count.get).pop()

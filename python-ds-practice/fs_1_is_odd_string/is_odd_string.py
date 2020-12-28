@@ -29,3 +29,8 @@ def is_odd_string(word):
     """
 
     # Hint: you may find the ord() function useful here
+    mutate = ord('a') + 1
+    summation = 0
+    for char in word.lower():
+        summation += ord(char) - mutate
+    return summation % 2 == 1

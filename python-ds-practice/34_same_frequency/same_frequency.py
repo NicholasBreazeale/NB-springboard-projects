@@ -10,3 +10,13 @@ def same_frequency(num1, num2):
         >>> same_frequency(1212, 2211)
         True
     """
+    def frequency(string):
+        letters = {}
+        for char in string:
+            if char not in letters:
+                letters[char] = 1
+            else:
+                letters[char] += 1
+        return sorted(letters)
+
+    return frequency(str(num1)) == frequency(str(num2))
