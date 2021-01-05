@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ survs[s].title }}{% endblock %}
+
+{% block content %}
+	<h1>{{ survs[s].title }}</h1>
+	{% for msg in get_flashed_messages() %}
+	<p><b>{{ msg }}</b></p>
+	{% endfor %}
+	<form action="answer" method="POST">
+		<input type="hidden" name="s" value="{{ s }}" />
+		<input type="hidden" name="q" value="{{ q }}" />
+		<label for="ans">{{ q+1 }}/{{ survs[s].questions|length }}. {{ survs[s].questions[q].question }}</label>
+		{% if survs[s].questions[q].allow_text %}
+		<input type="text" name="ans" id="ans" />
+		{% else %}
+		<select name="ans" id="ans">
+			{% for choice in survs[s].questions[q].choices %}
+			<option value="{{ choice }}">{{ choice }}</option>
+			{% endfor %}
+		</select>
+		{% endif %}
+		<br />
+		<input type="submit" value="Submit" />
+	</form>
+{% endblock %}
