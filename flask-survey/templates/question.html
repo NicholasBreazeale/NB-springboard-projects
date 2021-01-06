@@ -7,9 +7,7 @@
 	{% for msg in get_flashed_messages() %}
 	<p><b>{{ msg }}</b></p>
 	{% endfor %}
-	<form action="answer" method="POST">
-		<input type="hidden" name="s" value="{{ s }}" />
-		<input type="hidden" name="q" value="{{ q }}" />
+	<form action="/answer" method="POST">
 		<label for="ans">{{ q+1 }}/{{ survs[s].questions|length }}. {{ survs[s].questions[q].question }}</label>
 		{% if survs[s].questions[q].allow_text %}
 		<input type="text" name="ans" id="ans" />

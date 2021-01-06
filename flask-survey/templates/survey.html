@@ -6,7 +6,7 @@
 	<h1>Surveys</h1>
 	<ul>
 		{% for surv in survs %}
-		<li><a href="/questions?s={{ surv }}&q=0">{{ survs[surv].title }}</a></li>
+		<li><a href="/survey/{{ surv }}">{{ survs[surv].title }}</a></li>
 		{% endfor %}
 	</ul>
 {% endblock %}

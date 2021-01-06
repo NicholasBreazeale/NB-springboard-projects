@@ -1,40 +1,58 @@
-from flask import Flask, flash, redirect, render_template, request
-from surveys import *
+from flask import Flask, flash, redirect, render_template, request, session
+from surveys import surveys
 
 app = Flask(__name__)
-responses = []
+app.config["SECRET_KEY"] = "foobarbaz"
 
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-flashing = False
+# Mock DB where the survey responses are saved
+response_db = {}
+for s in surveys:
+	response_db[s] = []
 
 @app.route("/")
 def root():
 	return render_template("survey.html", survs=surveys)
 
-@app.route("/questions")
-def questions():
-	survey = request.args.get('s')
-	question_ID = int(request.args.get('q'))
+@app.route("/survey/<id>")
+def select_survey(id):
+	# Setup the necessary values for the survey
+	session["survey"] = id
+	session["questions"] = []
+	return redirect("/questions/0")
 
-	global flashing
-	print("question routed")
-	if flashing:
-		print("Flashing message")
-		flashing = False
+@app.route("/questions/<int:qid>")
+def questions(qid):
+	# Must sign up for a survey before answering questions
+	if "survey" not in session:
+		return redirect("/")
 
-	if question_ID != len(responses):
+	survey = session["survey"]
+	questions = session["questions"]
+
+	# Redirect the user to the correct question if they changed the url
+	if qid != len(questions):
 		flash("Redirected: tried to access an invalid question")
-		flashing = True
-		return redirect(f"/questions?s={survey}&q={len(responses)}")
-	return render_template("question.html", survs=surveys, s=survey, q=question_ID)
+		return redirect(f"/questions/{len(questions)}")
+
+	return render_template("question.html", survs=surveys, s=survey, q=qid)
 
 @app.route("/answer", methods=["POST"])
 def answer():
-	s = request.form['s']
-	q = int(request.form['q']) + 1
-	responses.append(request.form['ans'])
-	return redirect(f"/questions?s={s}&q={q}" if q < len(surveys[s].questions) else "/thank")
+	survey = session["survey"]
+	questions = session["questions"]
 
-@app.route("/thank")
-def thank():
-	return render_template("thank.html")
+	questions.append(request.form["ans"])
+
+	# Check if the user has answered all the questions
+	if len(questions) < len(surveys[survey].questions):
+		# If they have not, continue to the next question
+		session["questions"] = questions
+		return redirect(f"/questions/{len(questions)}")
+	else:
+		# If they have, save responses and thank them
+		response_db[session.pop("survey")].append(session.pop("questions"))
+		return redirect("/thanks")
+
+@app.route("/thanks")
+def thanks():
+	return render_template("thanks.html")
