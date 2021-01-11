@@ -22,10 +22,10 @@ def search_word():
 @app.route("/score", methods=["GET", "POST"])
 def scores():
 	if request.method == "POST":
-		score = request.json.get("s", 0)
+		score = request.form.get("s", 0)
 		# If high score does not exist or the current high score is lower than the new, set the high score to the new score
 		if "score" not in session or session["score"] < score:
 			session["score"] = score
 
 	# Return the high score
-	return jsonify(high=session.get("score", 0))
+	return jsonify(high=int(session.get("score", 0)))
