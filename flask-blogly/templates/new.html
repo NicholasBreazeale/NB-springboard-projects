@@ -4,6 +4,9 @@
 
 {% block content %}
 <h1>Create a user</h1>
+{% for msg in get_flashed_messages() %}
+<p>{{ msg }}</p>
+{% endfor %}
 <form action="/users/new" method="POST">
   {% include 'user_input.html' %}
   <input type="submit" value="Add" />

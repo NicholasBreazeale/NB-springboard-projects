@@ -1,10 +1,11 @@
 """Blogly application."""
 
-from flask import Flask, redirect, render_template, request
+from flask import Flask, flash, redirect, render_template, request
 from models import db, connect_db, User
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
+app.config['SECRET_KEY'] = 'foobarbaz'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost/blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
@@ -25,10 +26,17 @@ def user_new_form():
 
 @app.route("/users/new", methods=["POST"])
 def user_new():
-  new_user = User(first_name=request.form["firstName"], last_name=request.form["lastName"], image_url=request.form["imageUrl"])
+  first_name = request.form.get("firstName", None)
+  last_name = request.form.get("lastName", None)
+  image_url = request.form.get("imageUrl", None)
+  new_user = User(first_name=first_name, last_name=last_name, image_url=image_url)
 
   db.session.add(new_user)
-  db.session.commit()
+  try:
+    db.session.commit()
+  except Exception:
+    flash("Invalid parameters, first and last names are required")
+    return redirect("/users/new")
 
   return redirect("/users")
 
@@ -55,7 +63,7 @@ def user_edit_save(user_id):
 def user_delete(user_id):
   user = User.query.get(user_id)
   if user != None:
-    db.session.remove(user)
+    db.session.delete(user)
     db.session.commit()
 
   return redirect ("/users")
