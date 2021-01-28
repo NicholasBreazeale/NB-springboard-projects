@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<h1>Edit a user</h1>
+<form action="/users/{{user.id}}/edit" method="POST">
+  {% include 'user_input.html' %}
+  <a href="/users/{{user.id}}"><input type="button" value="Cancel" /></a>
+  <input type="submit" value="Save" />
+</form>
+{% endblock %}
