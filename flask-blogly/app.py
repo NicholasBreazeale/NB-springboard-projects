@@ -18,7 +18,7 @@ def user_redirect():
 
 @app.route("/users", methods=["GET"])
 def user_list():
-  return render_template("users.html", users=User.query.all())
+  return render_template("users.html", users=User.query.order_by(User.last_name, User.first_name).all())
 
 @app.route("/users/new", methods=["GET"])
 def user_new_form():
