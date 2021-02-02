@@ -1,6 +1,0 @@
-<label for="firstName">First Name</label>
-<input type="text" id="firstName" name="firstName" placeholder="Enter a first name" {% if user and user.first_name != None %}value="{{user.first_name}}"{% endif %} required /><br />
-<label for="lastName">Last Name</label>
-<input type="text" id="lastName" name="lastName" placeholder="Enter a last name" {% if user and user.last_name != None %}value="{{user.last_name}}"{% endif %} required /><br />
-<label for="imageUrl">Image URL</label>
-<input type="url" id="imageUrl" name="imageUrl" placeholder="Provide an image of this user" {% if user and user.image_url != None %}value="{{user.image_url}}"{% endif %} /><br />

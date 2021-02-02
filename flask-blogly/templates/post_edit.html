@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+<h1>Edit Post</h1>
+{% for msg in get_flashed_messages() %}
+<p>{{ msg }}</p>
+{% endfor %}
+<form action="/posts/{{ post.id }}/edit" method="POST">
+  {% include 'post_form.html' %}
+  <a href="/posts/{{ post.id }}"><input type="button" value="Cancel" /></a>
+  <input type="submit" value="Edit" />
+</form>
+{% endblock %}
