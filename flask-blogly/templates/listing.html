@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ type_singular.capitalize() }} Listing{% endblock %}
+
+{% block content %}
+<h1>{{ type_plural.capitalize() }}</h1>
+<ul>
+  {% for entry in entries %}
+  <li><a href="{{ request.path }}/{{ entry.id }}">{{ entry.link_display }}</a></li>
+  {% endfor %}
+</ul>
+<a href="/"><button>Home</button></a>
+{% if add_btn %}<a href="{{ request.path }}/new"><button>New {{ type_singular.capitalize() }}</button></a>{% endif %}
+{% endblock %}

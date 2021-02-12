@@ -1,6 +1,26 @@
-<label for="firstName">First Name</label>
-<input type="text" id="firstName" name="firstName" placeholder="Enter a first name" {% if user and user.first_name != None %}value="{{ user.first_name }}"{% endif %} /><br />
-<label for="lastName">Last Name</label>
-<input type="text" id="lastName" name="lastName" placeholder="Enter a last name" {% if user and user.last_name != None %}value="{{ user.last_name }}"{% endif %} /><br />
-<label for="imageUrl">Image URL</label>
-<input type="url" id="imageUrl" name="imageUrl" placeholder="Provide an image of this user" {% if user and user.image_url != None %}value="{{ user.image_url }}"{% endif %} /><br />
+{% extends 'base.html' %}
+
+{% if user == None %}
+{% set form_type = "Create" %}
+{% else %}
+{% set form_type = "Edit" %}
+{% endif %}
+
+{% block title %}{{ form_type }} User{% endblock %}
+
+{% block content %}
+<h1>{{ form_type }} User</h1>
+{% for msg in get_flashed_messages() %}
+<p>{{ msg }}</p>
+{% endfor %}
+<form action="{{ request.path }}" method="POST">
+  <label for="firstName">First Name</label>
+  <input type="text" id="firstName" name="firstName" placeholder="Enter a first name" {% if user and user.first_name != None %}value="{{ user.first_name }}"{% endif %} /><br />
+  <label for="lastName">Last Name</label>
+  <input type="text" id="lastName" name="lastName" placeholder="Enter a last name" {% if user and user.last_name != None %}value="{{ user.last_name }}"{% endif %} /><br />
+  <label for="imageUrl">Image URL</label>
+  <input type="url" id="imageUrl" name="imageUrl" placeholder="Provide an image of this user" {% if user and user.image_url != None %}value="{{ user.image_url }}"{% endif %} /><br />
+  <a href="{{ request.path[0:request.path.rfind('/')] }}"><input type="button" value="Cancel" /></a>
+  <input type="submit" value="{{ form_type }}" />
+</form>
+{% endblock %}

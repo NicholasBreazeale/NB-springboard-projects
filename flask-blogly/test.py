@@ -3,12 +3,6 @@ from app import app, db
 from models import User
 
 class FlaskTests(TestCase):
-  def test_root_redirect(self):
-    with app.test_client() as client:
-      resp = client.get("/")
-      self.assertEqual(resp.status_code, 302)
-      self.assertEqual(resp.location, "http://localhost/users")
-
   def test_client_ids(self):
     with app.test_client() as client:
       resp = client.get("/users/0")
