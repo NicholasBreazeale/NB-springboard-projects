@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Pet Details{% endblock %}
+
+{% block content %}
+<h1>Pet Details</h1>
+{% if pet.photo_url %}<img src="{{ pet.photo_url }}" />{% endif %}
+<p>{{ pet.name }}, {{ pet.species }}{% if pet.age %}, {{ pet.age }}{% endif %}</p>
+<h2>Edit Details</h2>
+{% for message in get_flashed_messages() %}
+{{ message }}
+{% endfor %}
+{% include "form.html" %}
+{% endblock %}
