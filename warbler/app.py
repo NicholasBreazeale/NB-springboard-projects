@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, MessageForm
+from forms import UserAddForm, LoginForm, MessageForm, ProfileEditForm
 from models import db, connect_db, User, Message
 
 CURR_USER_KEY = "curr_user"
@@ -109,11 +109,13 @@ def login():
     return render_template('users/login.html', form=form)
 
 
-@app.route('/logout')
+@app.route('/logout', methods=["POST"])
 def logout():
     """Handle logout of user."""
 
-    # IMPLEMENT THIS
+    do_logout()
+    flash("Goodbye!", "success")
+    return redirect("/login")
 
 
 ##############################################################################
@@ -211,7 +213,38 @@ def stop_following(follow_id):
 def profile():
     """Update profile for current user."""
 
-    # IMPLEMENT THIS
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = ProfileEditForm()
+
+    if form.validate_on_submit():
+        user = User.authenticate(g.user.username,
+                                 form.password.data)
+
+        if user:
+            for field in (f for f in form if f.widget.input_type != 'hidden' and f.name != 'password'):
+                val = field.data
+                colDefault = getattr(User, field.name).default
+                # If no value was input and a default value is available, use the default, otherwise use the input (even if blank)
+                setattr(user, field.name, colDefault.arg if not val and colDefault else val)
+
+            db.session.commit()
+            return redirect(f"/users/{g.user.id}")
+
+        flash("Incorrect password.", 'danger')
+
+    # Set form data for fields that have it, or that is a holdover from a failed submission
+    for field in (f for f in form if f.widget.input_type != 'hidden' and not f.data):
+        val = getattr(g.user, field.name)
+        colDefault = getattr(User, field.name).default
+        # If no column default is defined, display the data
+        # If a default is defined, only display the data if the current value differs
+        if not colDefault or val != colDefault.arg:
+            field.data = val
+
+    return render_template('users/edit.html', form=form, user_id=g.user.id)
 
 
 @app.route('/users/delete', methods=["POST"])
@@ -294,6 +327,7 @@ def homepage():
     if g.user:
         messages = (Message
                     .query
+                    .filter(Message.user_id.in_([u.id for u in g.user.following]))
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
