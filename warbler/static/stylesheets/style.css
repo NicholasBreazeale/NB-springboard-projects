@@ -31,19 +31,19 @@ body.error-404 {
   z-index: 9999;
 }
 
-.navbar input {
+.navbar form[action="/logout"] input {
   background: none;
   border: none;
   padding: 0;
 }
 
-.navbar a, .navbar input {
+.navbar a, .navbar form[action="/logout"] input {
   color: #66757f;
   font-size: 13px;
   font-weight: bold;
 }
 
-.navbar a:hover, .navbar input:hover {
+.navbar a:hover, .navbar form[action="/logout"] input:hover {
   color: #1c94e0;
 }
 
