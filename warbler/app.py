@@ -1,8 +1,9 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
 
 from forms import UserAddForm, LoginForm, MessageForm, ProfileEditForm
 from models import db, connect_db, User, Message, Likes
@@ -220,34 +221,28 @@ def user_likes(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('users/likes.html', user=user)
 
-@app.route('/users/add_like/<int:message_id>', methods=["POST"])
+@app.route("/users/like/<int:message_id>", methods=["POST", "DELETE"])
 def message_like(message_id):
-    """Like a message."""
+    """Like and unlike a message."""
 
     if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
+        return jsonify(message="Unauthorized", category="error"), 401
 
-    msg = Message.query.get(message_id)
-    if msg:
-        g.user.likes.append(msg)
-        db.session.commit()
-    return redirect(f"/users/{g.user.id}/likes")
+    message = Message.query.get_or_404(message_id)
 
+    if request.method == "POST":
+        try:
+            Likes.query.filter(Likes.user_id == g.user.id, Likes.message_id == message_id).one()
+        except NoResultFound:
+            g.user.likes.append(message)
+            db.session.commit()
+        return jsonify(message="Liked message", category="success")
 
-@app.route('/users/delete_like/<int:message_id>', methods=["POST"])
-def message_unlike(message_id):
-    """Remove a like on a message."""
-
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    like = Likes.query.filter(Likes.user_id == g.user.id, Likes.message_id == message_id).one()
-    if like:
-        db.session.delete(like)
-        db.session.commit()
-    return redirect(f"/users/{g.user.id}/likes")
+    if request.method == "DELETE":
+        if Likes.query.filter(Likes.user_id == g.user.id, Likes.message_id == message_id).one():
+            g.user.likes.remove(message)
+            db.session.commit()
+        return jsonify(message="Unliked message", category="success")
 
 
 @app.route('/users/profile', methods=["GET", "POST"])

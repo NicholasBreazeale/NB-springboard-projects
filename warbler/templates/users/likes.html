@@ -5,7 +5,7 @@
     <div class="row">
       <ul id="messages" class="list-group">
         {% for msg in user.likes %}
-          <li class="list-group-item">
+          <li class="list-group-item" id="{{ msg.id }}">
             <a href="/messages/{{ msg.id  }}" class="message-link"/>
             <a href="/users/{{ msg.user.id }}">
               <img src="{{ msg.user.image_url }}" alt="" class="timeline-image">
@@ -15,15 +15,15 @@
               <span class="text-muted">{{ msg.timestamp.strftime('%d %B %Y') }}</span>
               <p>{{ msg.text }}</p>
             </div>
-            <form method="POST" action="/users/delete_like/{{ msg.id }}" id="messages-form">
+            <div id="messages-form">
               <button class="btn btn-sm btn-primary">
                 <i class="fa fa-thumbs-up"></i> 
               </button>
-            </form>
+            </div>
           </li>
         {% endfor %}
       </ul>
     </div>
   </div>
-
+  <script src="{{ url_for('static', filename='scripts/app.js') }}"></script>
 {% endblock %}
