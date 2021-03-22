@@ -23,14 +23,15 @@ def lucky_num():
         numFact = requests.get(f"http://numbersapi.com/{num}/trivia").text
         year = form.year.data
         yearFact = requests.get(f"http://numbersapi.com/{year}/year").text
-        return jsonify(num={
-            "fact": numFact,
-            "num": num
-        },
-        year={
-            "fact": yearFact,
-            "year": year
-        })
+        return jsonify(
+            num={
+                "fact": numFact,
+                "num": num
+            },
+            year={
+                "fact": yearFact,
+                "year": year
+            }
+        )
     else:
-        print(form.errors)
         return jsonify(errors={e: form.errors[e] for e in form.errors})
