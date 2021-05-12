@@ -3,6 +3,7 @@
 
 const express = require("express");
 const companyRoutes = require("./routes/companies");
+const invoiceRoutes = require("./routes/invoices");
 
 const app = express();
 const ExpressError = require("./expressError")
@@ -11,6 +12,7 @@ app.use(express.json());
 
 /** Route handlers */
 app.use("/companies", companyRoutes);
+app.use("/invoices", invoiceRoutes);
 
 /** 404 handler */
 
