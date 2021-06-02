@@ -18,7 +18,7 @@ afterEach(async () => {
 
 afterAll(async () => {
   await db.end();
-})
+});
 
 describe("GET /companies", () => {
   test("Get a list of all companies", async () => {

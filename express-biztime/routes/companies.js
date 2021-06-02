@@ -4,12 +4,7 @@ const db = require ("../db");
 const ExpressError = require("../expressError");
 
 router.get("/", async (req, res, next) => {
-  try {
-    return res.json({companies: (await db.query(`SELECT code, name FROM companies`)).rows});
-  }
-  catch (err) {
-    return next(err);
-  }
+  return res.json({companies: (await db.query(`SELECT code, name FROM companies`)).rows});
 });
 
 router.get("/:code", async (req, res, next) => {
