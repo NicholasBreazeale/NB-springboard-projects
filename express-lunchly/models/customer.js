@@ -35,6 +35,12 @@ class Customer {
     return results.rows.map(c => new Customer(c));
   }
 
+  /** find customers by name. */
+
+  static async search(queryString) {
+    return (await Customer.all()).filter(c => new RegExp(`.*${queryString}.*`, "i").test(c.fullName()));
+  }
+
   /** get a customer by ID. */
 
   static async get(id) {
