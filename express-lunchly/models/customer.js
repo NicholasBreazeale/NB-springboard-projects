@@ -16,7 +16,7 @@ class Customer {
 
   /** return the customer's full name. */
 
-  fullName() {
+  get fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
 
@@ -38,7 +38,7 @@ class Customer {
   /** find customers by name. */
 
   static async search(queryString) {
-    return (await Customer.all()).filter(c => new RegExp(`.*${queryString}.*`, "i").test(c.fullName()));
+    return (await Customer.all()).filter(c => new RegExp(`.*${queryString}.*`, "i").test(c.fullName));
   }
 
   /** find the top 10 customers with the most reservations. */

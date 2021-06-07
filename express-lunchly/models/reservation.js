@@ -16,6 +16,27 @@ class Reservation {
     this.notes = notes;
   }
 
+  set customerId(val) {
+    if (this.customerId !== undefined) {
+      throw new Error("customerId is already defined");
+    }
+    this.customerId = val;
+  }
+
+  set numGuests(val) {
+    if (val < 1) {
+      throw new Error("Must set at least 1 guest");
+    }
+    this.numGuests = val;
+  }
+
+  set startAt(val) {
+    if (!(val instanceof Date)) {
+      throw new Error("Not a date");
+    }
+    this.startAt = val;
+  }
+
   /** formatter for startAt */
 
   getformattedStartAt() {
