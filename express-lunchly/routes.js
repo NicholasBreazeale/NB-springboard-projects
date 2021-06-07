@@ -46,6 +46,17 @@ router.post("/add/", async function(req, res, next) {
   }
 });
 
+/** Show the top 8 customers. */
+
+router.get("/best/", async function(req, res, next) {
+  try {
+    const customers = await Customer.best();
+    return res.render("customer_best.html", { customers });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** Show a customer, given their ID. */
 
 router.get("/:id/", async function(req, res, next) {

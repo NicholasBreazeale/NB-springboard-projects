@@ -41,6 +41,24 @@ class Customer {
     return (await Customer.all()).filter(c => new RegExp(`.*${queryString}.*`, "i").test(c.fullName()));
   }
 
+  /** find the top 10 customers with the most reservations. */
+
+  static async best() {
+    const results = await db.query(
+      `SELECT c.id,
+         first_name AS "firstName",
+         last_name AS "lastName",
+         phone,
+         c.notes
+       FROM customers c
+       FULL JOIN reservations r ON c.id = r.customer_id
+       GROUP BY c.id
+       ORDER BY COUNT(r.id) DESC
+       LIMIT 10`
+    );
+    return results.rows.map(c => new Customer(c));
+  }
+
   /** get a customer by ID. */
 
   static async get(id) {
