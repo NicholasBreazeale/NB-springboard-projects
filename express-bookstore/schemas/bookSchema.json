@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://example.com/example.json",
+  "title": "Books",
+  "description": "Validate the creation and updating of books",
+  "type": "object",
+  "properties": {
+    "isbn": {
+      "type": "string",
+      "uniqueItems": true
+    },
+    "amazon_url": {
+      "type": "string",
+      "pattern": "^(https://www\\.amazon\\.com/)(.*)$"
+    },
+    "author": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "pages": {
+      "type": "integer"
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "year": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "isbn",
+    "amazon_url",
+    "author",
+    "language",
+    "pages",
+    "publisher",
+    "title",
+    "year"
+  ]
+}
