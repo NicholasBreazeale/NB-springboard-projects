@@ -45,11 +45,37 @@ class Company {
   }
 
   /** Find all companies.
+   * 
+   * Optionally filter by name, employee count, or both.
    *
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
-  static async findAll() {
+  static async findAll(query) {
+    const { name, minEmployees, maxEmployees } = query;
+
+    // Validate query string
+    for (const key in query) {
+      if (!["name", "minEmployees", "maxEmployees"].includes(key)) throw new BadRequestError(`Invalid query key: ${key}`);
+    }
+    if (minEmployees && maxEmployees && minEmployees > maxEmployees) throw new BadRequestError("minEmployees must be less than maxEmployees");
+
+    // Generate where conditions and paramaterized values
+    const whereConditions = [];
+    const values = [];
+    if (name) {
+      whereConditions.push(`LOWER(name) LIKE $${whereConditions.length + 1}`);
+      values.push(`%${name.toLowerCase()}%`);
+    }
+    if (minEmployees) {
+      whereConditions.push(`num_employees >= $${whereConditions.length + 1}`);
+      values.push(minEmployees);
+    }
+    if (maxEmployees) {
+      whereConditions.push(`num_employees <= $${whereConditions.length + 1}`);
+      values.push(maxEmployees);
+    }
+
     const companiesRes = await db.query(
           `SELECT handle,
                   name,
@@ -57,7 +83,9 @@ class Company {
                   num_employees AS "numEmployees",
                   logo_url AS "logoUrl"
            FROM companies
-           ORDER BY name`);
+           ${whereConditions.length ? `WHERE ${whereConditions.join(" AND ")}
+          ` : ""}ORDER BY name`,
+        values);
     return companiesRes.rows;
   }
 
