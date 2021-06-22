@@ -51,13 +51,10 @@ class Company {
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
-  static async findAll(query) {
-    const { name, minEmployees, maxEmployees } = query;
-
+  static async findAll({ name, minEmployees, maxEmployees, ...rest}) {
     // Validate query string
-    for (const key in query) {
-      if (!["name", "minEmployees", "maxEmployees"].includes(key)) throw new BadRequestError(`Invalid query key: ${key}`);
-    }
+    const restKeys = Object.keys(rest);
+    if (restKeys.length) throw new BadRequestError(`Invalid query keys: ${restKeys.join(", ")}`);
     if (minEmployees && maxEmployees && minEmployees > maxEmployees) throw new BadRequestError("minEmployees must be less than maxEmployees");
 
     // Generate where conditions and paramaterized values
