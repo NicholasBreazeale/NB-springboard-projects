@@ -111,6 +111,38 @@ describe("POST /users", function () {
   });
 });
 
+/************************************** POST /users/:username/jobs/:id */
+
+describe("POST /users/:username/jobs/:id", function () {
+  test("works for admin", async function () {
+    const resp = await request(app)
+        .post(`/users/u1/jobs/2`)
+        .set("authorization", `Bearer ${u2Token}`);
+    expect(resp.body).toEqual({applied: 2});
+  });
+
+  test("works for current user", async function () {
+    const resp = await request(app)
+        .post(`/users/u1/jobs/2`)
+        .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.body).toEqual({applied: 2});
+  });
+
+  test("not found if invalid user", async function () {
+    const resp = await request(app)
+        .post(`/users/nope/jobs/2`)
+        .set("authorization", `Bearer ${u2Token}`);
+    expect(resp.statusCode).toEqual(404);
+  });
+
+  test("not found if invalid job ID", async function () {
+    const resp = await request(app)
+        .post(`/users/u1/jobs/999`)
+        .set("authorization", `Bearer ${u2Token}`);
+    expect(resp.statusCode).toEqual(404);
+  });
+});
+
 /************************************** GET /users */
 
 describe("GET /users", function () {
@@ -177,6 +209,7 @@ describe("GET /users/:username", function () {
         lastName: "U1L",
         email: "user1@user.com",
         isAdmin: false,
+        jobs: [1],
       },
     });
   });
@@ -192,6 +225,7 @@ describe("GET /users/:username", function () {
         lastName: "U1L",
         email: "user1@user.com",
         isAdmin: false,
+        jobs: [1]
       },
     });
   });

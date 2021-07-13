@@ -96,6 +96,26 @@ class User {
     return user;
   }
 
+  /** Apply for a job.
+   *
+   * Returns [{ username, jobId }]
+   */
+
+  static async apply(username, jobId) {
+    const userRes = await db.query(`SELECT username FROM users WHERE username = $1`, [username]);
+    if (!userRes.rows[0]) throw new NotFoundError(`No user: ${username}`);
+    const jobRes = await db.query(`SELECT id FROM jobs WHERE id = $1`, [jobId]);
+    if (!jobRes.rows[0]) throw new NotFoundError(`No job: ${jobId}`);
+
+    const result = await db.query(
+          `INSERT INTO applications (username, job_id)
+           VALUES ($1, $2)
+           RETURNING username, job_id AS "jobId"`,
+        [username, jobId]);
+
+    return result.rows[0];
+  }
+
   /** Find all users.
    *
    * Returns [{ username, first_name, last_name, email, is_admin }, ...]
@@ -138,6 +158,8 @@ class User {
     const user = userRes.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
+
+    user.jobs = (await db.query(`SELECT job_id AS "jobId" FROM applications WHERE username = $1`, [username])).rows.map((r) => r.jobId);
 
     return user;
   }
