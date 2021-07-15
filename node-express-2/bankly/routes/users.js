@@ -63,7 +63,8 @@ router.get('/:username', authUser, requireLogin, async function(
  *
  */
 
-router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
+// FIXES BUG #3
+router.patch('/:username', authUser, requireLogin, async function(
   req,
   res,
   next
@@ -76,6 +77,10 @@ router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
     // get fields to change; remove token so we don't try to change it
     let fields = { ...req.body };
     delete fields._token;
+    // FIXES BUG #4
+    for (let key in fields) {
+      if (['admin'].includes(key)) throw new ExpressError(`Cannot edit ${key} field`, 401);
+    }
 
     let user = await User.update(req.params.username, fields);
     return res.json({ user });
@@ -100,7 +105,8 @@ router.delete('/:username', authUser, requireAdmin, async function(
   next
 ) {
   try {
-    User.delete(req.params.username);
+    // FIXES BUG #5
+    await User.delete(req.params.username);
     return res.json({ message: 'deleted' });
   } catch (err) {
     return next(err);

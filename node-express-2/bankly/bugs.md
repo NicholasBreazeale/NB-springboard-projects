@@ -1,0 +1,6 @@
+- BUG #1: `POST /auth/login` not waiting for authentication promise to resolve
+- BUG #2: In `models/user.js` the `get` function does not properly throw an error when user is not found
+- BUG #3: `PATCH /users/:username` only allows admin
+- BUG #4: `PATCH /users/:username` can edit not-allowed-fields
+- BUG #5: `DELETE /users/:username` not waiting for authentication promise to resolve
+- BUG #6: In `middleware/auth.js` the `authUser` function does not actually verify the token

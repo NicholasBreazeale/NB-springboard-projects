@@ -90,6 +90,36 @@ describe("POST /auth/login", function() {
     expect(username).toBe("u1");
     expect(admin).toBe(false);
   });
+
+  // TESTS BUG #1
+  test("should not allow a user to login with invalid username", async function() {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({
+        username: "not-a-user",
+        password: "pwd"
+      });
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toEqual({
+      status: 401,
+      message: `Cannot authenticate`
+    });
+  });
+
+  // TESTS BUG #1
+  test("should not allow a user to login with incorrect password", async function() {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({
+        username: "u1",
+        password: "bad-pdw"
+      });
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toEqual({
+      status: 401,
+      message: `Cannot authenticate`
+    });
+  });
 });
 
 describe("GET /users", function() {
@@ -126,6 +156,18 @@ describe("GET /users/[username]", function() {
       phone: "phone1"
     });
   });
+
+  // TESTS BUG #2
+  test("should return 404 if cannot find", async function () {
+    const response = await request(app)
+      .get("/users/not-a-user")
+      .send({ _token: tokens.u1 });
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toEqual({
+      status: 404,
+      message: `No such user`
+    });
+  });
 });
 
 describe("PATCH /users/[username]", function() {
@@ -145,6 +187,23 @@ describe("PATCH /users/[username]", function() {
     const response = await request(app)
       .patch("/users/u1")
       .send({ _token: tokens.u3, first_name: "new-fn1" }); // u3 is admin
+    expect(response.statusCode).toBe(200);
+    expect(response.body.user).toEqual({
+      username: "u1",
+      first_name: "new-fn1",
+      last_name: "ln1",
+      email: "email1",
+      phone: "phone1",
+      admin: false,
+      password: expect.any(String)
+    });
+  });
+
+  // TESTS BUG #3
+  test("should patch data if right user", async function() {
+    const response = await request(app)
+      .patch("/users/u1")
+      .send({ _token: tokens.u1, first_name: "new-fn1"});
     expect(response.statusCode).toBe(200);
     expect(response.body.user).toEqual({
       username: "u1",
@@ -191,6 +250,14 @@ describe("DELETE /users/[username]", function() {
       .send({ _token: tokens.u3 }); // u3 is admin
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({ message: "deleted" });
+  });
+
+  // TESTS BUG #5
+  test("should return 404 if cannot find", async function() {
+    const response = await request(app)
+      .delete("/users/not-a-user")
+      .send({ _token: tokens.u3 });
+    expect(response.statusCode).toBe(404);
   });
 });
 
