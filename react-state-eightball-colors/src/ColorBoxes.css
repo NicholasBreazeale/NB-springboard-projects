@@ -1,0 +1,7 @@
+.ColorBoxes > div {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  height: 100px;
+  width: 100px;
+}
