@@ -1,0 +1,8 @@
+.Coin {
+  text-align: center;
+}
+
+.Coin img {
+  max-height: 200px;
+  max-width: 200px;
+}
