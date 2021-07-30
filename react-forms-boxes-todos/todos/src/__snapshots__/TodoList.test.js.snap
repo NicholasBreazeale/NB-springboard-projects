@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can add and remove tasks 1`] = `
+<DocumentFragment>
+  <form>
+    <label
+      for="text"
+    >
+      Todo:
+    </label>
+    <input
+      id="text"
+      name="text"
+      type="text"
+      value=""
+    />
+    <button
+      data-testid="submit-btn"
+    >
+      Add
+    </button>
+  </form>
+  <div
+    data-testid="todo-list"
+  />
+</DocumentFragment>
+`;
+
+exports[`can add and remove tasks 2`] = `
+<DocumentFragment>
+  <form>
+    <label
+      for="text"
+    >
+      Todo:
+    </label>
+    <input
+      id="text"
+      name="text"
+      type="text"
+      value=""
+    />
+    <button
+      data-testid="submit-btn"
+    >
+      Add
+    </button>
+  </form>
+  <div
+    data-testid="todo-list"
+  >
+    <div>
+      Hello world!
+      <button>
+        X
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`can add and remove tasks 3`] = `
+<DocumentFragment>
+  <form>
+    <label
+      for="text"
+    >
+      Todo:
+    </label>
+    <input
+      id="text"
+      name="text"
+      type="text"
+      value=""
+    />
+    <button
+      data-testid="submit-btn"
+    >
+      Add
+    </button>
+  </form>
+  <div
+    data-testid="todo-list"
+  >
+    <div>
+      Hello world!
+      <button>
+        X
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`matches snapshot 1`] = `
+<DocumentFragment>
+  <form>
+    <label
+      for="text"
+    >
+      Todo:
+    </label>
+    <input
+      id="text"
+      name="text"
+      type="text"
+      value=""
+    />
+    <button
+      data-testid="submit-btn"
+    >
+      Add
+    </button>
+  </form>
+  <div
+    data-testid="todo-list"
+  />
+</DocumentFragment>
+`;
