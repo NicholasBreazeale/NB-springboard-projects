@@ -9,8 +9,11 @@ const useAxios = url => {
     const response = await axios.get(`${baseUrl}${typeof(route) === "string" ? route : ""}`);
     setData(data => [...data, { ...response.data, id: uuid() }]);
   };
+  const deleteData = () => {
+    setData([]);
+  }
 
-  return [data, addData];
+  return [data, addData, deleteData];
 };
 
 export default useAxios;
