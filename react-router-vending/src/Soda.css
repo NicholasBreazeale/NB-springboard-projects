@@ -1,0 +1,10 @@
+@keyframes spinning {
+  from {transform: rotate(0deg)}
+  to {transform: rotate(360deg)}
+}
+
+.spin {
+  height: 50%;
+  margin-top: 100px;
+  animation: spinning 2s linear infinite;
+}

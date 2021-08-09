@@ -1,0 +1,13 @@
+.VendingMachine {
+  height: 100vh;
+  width: 100vw;
+  background-image: url("https://vignette.wikia.nocookie.net/to-aru-majutsu-no-index/images/2/26/Jihanki.png/revision/latest?cb=20120504161315");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.VendingMachine a {
+  display: inline-block;
+  width: calc(100%/3);
+}
