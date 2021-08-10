@@ -1,0 +1,14 @@
+.DogDetails {
+  text-align: center;
+}
+
+.DogDetails ul {
+  display: inline-block
+}
+.DogDetails ul li {
+  text-align: initial;
+}
+
+.DogDetails img {
+  border-radius: 5%;
+}
