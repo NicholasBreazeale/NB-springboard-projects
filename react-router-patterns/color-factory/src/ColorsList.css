@@ -1,0 +1,16 @@
+.ColorsList {
+  text-align: center;
+}
+
+.ColorsList .header {
+  background-color: black;
+  padding: 10px;
+}
+
+.ColorsList .header * {
+  color: white;
+}
+
+.ColorsList .list * {
+  color: black;
+}
