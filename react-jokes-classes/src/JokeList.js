@@ -76,7 +76,9 @@ class JokeList extends Component {
       );
     }
 
-    return null;
+    return (
+      <div className="JokeList-spinner"></div>
+    );
   }
 }
 
