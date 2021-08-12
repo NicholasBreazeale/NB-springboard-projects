@@ -19,11 +19,10 @@ class JokeList extends Component {
   };
 
   getJokes = async () => {
-    const { numJokesToGet } = this.props;
     let j = [...this.state.jokes];
     let seenJokes = new Set();
     try {
-      while (j.length < numJokesToGet) {
+      while (j.length < this.props.numJokesToGet) {
         let res = await axios.get("https://icanhazdadjoke.com", {
           headers: { Accept: "application/json" }
         });
