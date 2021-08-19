@@ -1,23 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import NavBar from "./NavBar";
+import Home from "./Home";
+import CompanyList from "./CompanyList";
+import Company from "./Company";
+import JobList from "./JobList";
+import UserLogin from "./UserLogin";
+import UserSignUp from "./UserSignUp";
+import User from "./User";
 
 function App() {
+  const [user, setUser] = useState(null);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <NavBar user={user} />
+        <main>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/companies">
+              <CompanyList />
+            </Route>
+            <Route path="/companies/:handle">
+              <Company />
+            </Route>
+            <Route exact path="/jobs">
+              <JobList />
+            </Route>
+            <Route exact path="/login">
+              <UserLogin />
+            </Route>
+            <Route exact path="/signup">
+              <UserSignUp />
+            </Route>
+            <Route exact path="/profile">
+              <User />
+            </Route>
+          </Switch>
+        </main>
+      </BrowserRouter>
     </div>
   );
 }
