@@ -5,6 +5,7 @@ import Home from "./Home";
 import CompanyList from "./CompanyList";
 import CompanyDetail from "./CompanyDetail";
 import JobList from "./JobList";
+import JobDetail from "./JobDetail";
 import UserLogin from "./UserLogin";
 import UserSignUp from "./UserSignUp";
 import User from "./User";
@@ -29,6 +30,9 @@ function App() {
             </Route>
             <Route exact path="/jobs">
               <JobList />
+            </Route>
+            <Route path="/jobs/:id">
+              <JobDetail />
             </Route>
             <Route exact path="/login">
               <UserLogin />
