@@ -6,21 +6,37 @@ import CompanyList from "./CompanyList";
 import CompanyDetail from "./CompanyDetail";
 import JobList from "./JobList";
 import JobDetail from "./JobDetail";
-import UserLogin from "./UserLogin";
-import UserSignUp from "./UserSignUp";
 import User from "./User";
+import LoginForm from "./LoginForm";
+import SignUpForm from "./SignUpForm";
+import UserContext from "./UserContext";
+import JoblyApi from "./api";
 
 function App() {
   const [user, setUser] = useState(null);
 
+  const login = async data => {
+    const token = await JoblyApi.userLogin(data);
+    setUser({username: data.username, token});
+  }
+
+  const signUp = async data => {
+    const token = await JoblyApi.userSignUp(data);
+    setUser({username: data.username, token});
+  }
+
+  const logout = () => {
+    setUser(null);
+  }
+
   return (
-    <div className="App">
+    <UserContext.Provider value={user}>
       <BrowserRouter>
-        <NavBar user={user} />
+        <NavBar logout={logout} />
         <main>
           <Switch>
             <Route exact path="/">
-              <Home />
+              <Home user={user} />
             </Route>
             <Route exact path="/companies">
               <CompanyList />
@@ -35,10 +51,10 @@ function App() {
               <JobDetail />
             </Route>
             <Route exact path="/login">
-              <UserLogin />
+              <LoginForm formSubmition={login} />
             </Route>
             <Route exact path="/signup">
-              <UserSignUp />
+              <SignUpForm formSubmition={signUp} />
             </Route>
             <Route exact path="/profile">
               <User />
@@ -46,7 +62,7 @@ function App() {
           </Switch>
         </main>
       </BrowserRouter>
-    </div>
+    </UserContext.Provider>
   );
 }
 

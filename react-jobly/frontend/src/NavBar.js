@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./NavBar.css";
 import { NavLink } from "react-router-dom";
-import { Navbar, Nav, NavItem } from "reactstrap";
+import { Button, Navbar, Nav, NavItem } from "reactstrap";
+import UserContext from "./UserContext";
 
-function NavBar({ user }) {
+function NavBar({ logout }) {
+  const user = useContext(UserContext);
+
   return (
     <div>
       <Navbar className="justify-content-between" expand="md">
@@ -19,16 +22,21 @@ function NavBar({ user }) {
             <NavLink to="/jobs">Jobs</NavLink>
           </NavItem>
           {user ?
-            <NavItem>
-              <NavLink to="/profile">{user.username}</NavLink>
-            </NavItem>
+            <>
+              <NavItem>
+                <NavLink to="/profile">{user.username}</NavLink>
+              </NavItem>
+              <NavItem>
+                <Button onClick={logout}>Logout</Button>
+              </NavItem>
+            </>
             :
             <>
               <NavItem>
-                <NavLink to="/login">Login</NavLink>
+                <NavLink to="/signup">Sign Up</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/signup">Sign Up</NavLink>
+                <NavLink to="/login">Login</NavLink>
               </NavItem>
             </>
           }
