@@ -5,7 +5,7 @@ import { Button, Navbar, Nav, NavItem } from "reactstrap";
 import UserContext from "./UserContext";
 
 function NavBar({ logout }) {
-  const user = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
 
   return (
     <div>
@@ -21,10 +21,10 @@ function NavBar({ logout }) {
           <NavItem>
             <NavLink to="/jobs">Jobs</NavLink>
           </NavItem>
-          {user ?
+          {currentUser ?
             <>
               <NavItem>
-                <NavLink to="/profile">{user.username}</NavLink>
+                <NavLink to="/profile">{currentUser}</NavLink>
               </NavItem>
               <NavItem>
                 <Button onClick={logout}>Logout</Button>

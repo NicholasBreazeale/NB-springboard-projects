@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import NavBar from "./NavBar";
 import Home from "./Home";
@@ -11,32 +11,35 @@ import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import UserContext from "./UserContext";
 import JoblyApi from "./api";
+import useLocalStorage from "./useLocalStorage";
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser, removeCurrentUser] = useLocalStorage("currentUser");
+  const [token, setToken, removeToken] = useLocalStorage("token");
 
   const login = async data => {
-    const token = await JoblyApi.userLogin(data);
-    setUser({username: data.username, token});
+    setToken(await JoblyApi.userLogin(data));
+    setCurrentUser(data.username);
   }
 
   const signUp = async data => {
-    const token = await JoblyApi.userSignUp(data);
-    setUser({username: data.username, token});
+    setToken(await JoblyApi.userSignUp(data));
+    setCurrentUser(data.username);
   }
 
   const logout = () => {
-    setUser(null);
+    removeCurrentUser();
+    removeToken();
   }
 
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider value={{currentUser, token}}>
       <BrowserRouter>
         <NavBar logout={logout} />
         <main>
           <Switch>
             <Route exact path="/">
-              <Home user={user} />
+              <Home />
             </Route>
             <Route exact path="/companies">
               <CompanyList />
