@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import NavBar from "./NavBar";
 import Home from "./Home";
 import CompanyList from "./CompanyList";
@@ -41,18 +41,6 @@ function App() {
             <Route exact path="/">
               <Home />
             </Route>
-            <Route exact path="/companies">
-              <CompanyList />
-            </Route>
-            <Route path="/companies/:handle">
-              <CompanyDetail />
-            </Route>
-            <Route exact path="/jobs">
-              <JobList />
-            </Route>
-            <Route path="/jobs/:id">
-              <JobDetail />
-            </Route>
             <Route exact path="/login">
               <LoginForm formSubmition={login} />
             </Route>
@@ -62,6 +50,23 @@ function App() {
             <Route exact path="/profile">
               <User />
             </Route>
+            {currentUser ? <>
+              <Route exact path="/companies">
+                <CompanyList />
+              </Route>
+              <Route path="/companies/:handle">
+                <CompanyDetail />
+              </Route>
+              <Route exact path="/jobs">
+                <JobList />
+              </Route>
+              <Route path="/jobs/:id">
+                <JobDetail />
+              </Route>
+            </>
+            :
+            <Redirect to="/" />
+            }
           </Switch>
         </main>
       </BrowserRouter>

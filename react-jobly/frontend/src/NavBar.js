@@ -15,14 +15,14 @@ function NavBar({ logout }) {
         </NavLink>
 
         <Nav className="ml-auto" navbar>
-          <NavItem>
-            <NavLink to="/companies">Companies</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to="/jobs">Jobs</NavLink>
-          </NavItem>
           {currentUser ?
             <>
+              <NavItem>
+                <NavLink to="/companies">Companies</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink to="/jobs">Jobs</NavLink>
+              </NavItem>
               <NavItem>
                 <NavLink to="/profile">{currentUser}</NavLink>
               </NavItem>
