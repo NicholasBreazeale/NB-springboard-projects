@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Input, InputGroup } from "reactstrap";
-import Form from "./Form";
+import FormStack from "./FormStack";
 
 function SignUpForm({ formSubmition }) {
   const history = useHistory();
@@ -12,7 +12,7 @@ function SignUpForm({ formSubmition }) {
   }
 
   return (
-    <Form
+    <FormStack
       initialState={{
         username: "",
         password: "",
@@ -43,7 +43,7 @@ function SignUpForm({ formSubmition }) {
         <Input type="email" id="email" name="email" />
       </InputGroup>
       <Button color="primary">Submit</Button>
-    </Form>
+    </FormStack>
   );
 }
 

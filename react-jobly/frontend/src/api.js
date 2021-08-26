@@ -57,6 +57,11 @@ class JoblyApi {
     return res.user;
   }
 
+  static async patchUser(username, data) {
+    let res = await this.request(`users/${username}`, data, "patch");
+    return res.user;
+  }
+
   /** Get all the companies. */
 
   static async getCompanies(data = {}) {

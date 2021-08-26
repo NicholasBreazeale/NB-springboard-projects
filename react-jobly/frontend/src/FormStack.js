@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Alert, Col } from "reactstrap";
 
-function Form({ initialState, formSubmition, children }) {
+function FormStack({ initialState, formSubmition, children }) {
   const [formData, setFormData] = useState(initialState);
   const [alerts, setAlerts] = useState([]);
 
@@ -19,7 +19,12 @@ function Form({ initialState, formSubmition, children }) {
     try {
       await formSubmition(formData);
     } catch (err) {
-      setAlerts(err);
+      if (Array.isArray(err)) {
+        setAlerts(err);
+      }
+      else {
+        setAlerts([err]);
+      }
     }
   }
 
@@ -33,4 +38,4 @@ function Form({ initialState, formSubmition, children }) {
   )
 }
 
-export default Form;
+export default FormStack;
