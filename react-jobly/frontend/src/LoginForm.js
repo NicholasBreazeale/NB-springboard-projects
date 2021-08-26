@@ -1,46 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import { Alert, Button, Col, Input, InputGroup } from "reactstrap";
+import { Button, Input, InputGroup } from "reactstrap";
+import Form from "./Form";
 
 function LoginForm({ formSubmition }) {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: ""
-  });
-  const [alerts, setAlerts] = useState([]);
   const history = useHistory();
 
-  const handleChange = event => {
-    const { name, value } = event.target;
-    setFormData(formData => ({...formData, [name]: value}));
-  }
-
-  const handleSubmit = async event => {
-    event.preventDefault();
-    setAlerts([]);
-    try {
-      await formSubmition(formData);
-      history.push("/");
-    } catch (err) {
-      setAlerts(err);
-    }
+  const handleSubmit = async data => {
+    await formSubmition(data);
+    history.push("/");
   }
 
   return (
-    <Col xs={{ size: 8, offset: 2 }} sm={{ size: 6, offset: 3 }} md={{ size: 4, offset: 4 }}>
-      <form className="d-block text-center" onSubmit={handleSubmit}>
-        {alerts && alerts.map(a => (<Alert color="danger" key={a}>{a}</Alert>))}
-        <label htmlFor="username">Username</label>
-        <InputGroup>
-          <Input type="text" id="username" name="username" onChange={handleChange} />
-        </InputGroup>
-        <label htmlFor="password">Password</label>
-        <InputGroup>
-          <Input type="password" id="password" name="password" onChange={handleChange} />
-        </InputGroup>
-        <Button color="primary">Submit</Button>
-      </form>
-    </Col>
+  <Form initialState={{ username: "", password: "" }} formSubmition={handleSubmit}>
+    <label htmlFor="username">Username</label>
+    <InputGroup>
+      <Input type="text" id="username" name="username" />
+    </InputGroup>
+    <label htmlFor="password">Password</label>
+    <InputGroup>
+      <Input type="password" id="password" name="password" />
+    </InputGroup>
+    <Button color="primary">Submit</Button>
+  </Form>
   );
 }
 
