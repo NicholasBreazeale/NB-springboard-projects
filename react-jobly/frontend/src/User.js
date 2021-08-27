@@ -12,7 +12,8 @@ function User() {
   useEffect(() => {
     async function getUser() {
       const user = await JoblyApi.getUser(currentUser);
-      setUser(user);
+      const jobs = await Promise.all(user.applications.map(a => JoblyApi.getJob(a)));
+      setUser({...user, jobs});
       setIsLoading(false);
     }
     getUser();
@@ -37,8 +38,15 @@ function User() {
   return (
     <>
       <div className="text-center">
+        <h3>Details</h3>
         <p><b>Name:</b> {user.firstName} {user.lastName}</p>
         <p><b>Email:</b> {user.email}</p>
+        {user.jobs && (<>
+          <h4>Jobs</h4>
+          <ul>
+            {user.jobs.map(j => <li key={j.id}><a href={`jobs/${j.id}`}>{j.title}</a></li>)}
+          </ul>
+        </>)}
       </div>
       <h3 className="text-center">Edit Profile</h3>
       <FormStack
