@@ -6,7 +6,7 @@ function JobSearch() {
   const [searchData, setSearchData] = useState({
     title: "",
     minSalary: "",
-    hasEquity: "false"
+    hasEquity: ""
   });
   const history = useHistory();
   const { search } = useLocation();
@@ -27,7 +27,7 @@ function JobSearch() {
   // On checkbox change, update the search data 
   const handleCheckbox = event => {
     const { name, checked } = event.target;
-    setSearchData(searchData => ({...searchData, [name]: checked.toString()}));
+    setSearchData(searchData => ({...searchData, [name]: checked ? "true" : ""}));
   }
 
   // On submit, add the appropriate query parameters to the url
