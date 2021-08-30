@@ -1,11 +1,17 @@
 import React, { useContext } from "react";
 import "./NavBar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { Button, Navbar, Nav, NavItem } from "reactstrap";
 import UserContext from "./UserContext";
 
 function NavBar({ logout }) {
   const { currentUser } = useContext(UserContext);
+  const history = useHistory();
+
+  const handleClick = () => {
+    logout();
+    history.push("/")
+  }
 
   return (
     <div>
@@ -27,7 +33,7 @@ function NavBar({ logout }) {
                 <NavLink to="/profile">{currentUser}</NavLink>
               </NavItem>
               <NavItem>
-                <Button onClick={logout}>Logout</Button>
+                <Button onClick={handleClick}>Logout</Button>
               </NavItem>
             </>
             :

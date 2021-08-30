@@ -1,8 +1,16 @@
 import React from "react";
 import { Button, Input, InputGroup } from "reactstrap";
 import FormStack from "./FormStack";
+import { useHistory } from "react-router-dom";
 
 function SignUpForm({ formSubmition }) {
+  const history = useHistory();
+
+  const handleSubmit = async data => {
+    await formSubmition(data);
+    history.push("/");
+  }
+
   return (
     <FormStack
       initialState={{
@@ -12,7 +20,7 @@ function SignUpForm({ formSubmition }) {
         lastName: "",
         email: ""
       }}
-      formSubmition={formSubmition}
+      formSubmition={handleSubmit}
     >
       <label htmlFor="username">Username</label>
       <InputGroup>

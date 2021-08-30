@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import NavBar from "./NavBar";
 import Home from "./Home";
 import CompanyList from "./CompanyList";
@@ -16,24 +16,20 @@ import useLocalStorage from "./useLocalStorage";
 function App() {
   const [currentUser, setCurrentUser, removeCurrentUser] = useLocalStorage("currentUser");
   const [token, setToken, removeToken] = useLocalStorage("token");
-  const history = useHistory();
 
   const login = async data => {
     setToken(await JoblyApi.userLogin(data));
     setCurrentUser(data.username);
-    history.push("/");
   }
 
   const signUp = async data => {
     setToken(await JoblyApi.userSignUp(data));
     setCurrentUser(data.username);
-    history.push("/");
   }
 
   const logout = () => {
     removeCurrentUser();
     removeToken();
-    history.push("/");
   }
 
   return (
@@ -54,22 +50,23 @@ function App() {
             <Route exact path="/profile">
               <User />
             </Route>
-            {currentUser ? <>
-              <Route exact path="/companies">
-                <CompanyList />
-              </Route>
-              <Route path="/companies/:handle">
-                <CompanyDetail />
-              </Route>
-              <Route exact path="/jobs">
-                <JobList />
-              </Route>
-              <Route path="/jobs/:id">
-                <JobDetail />
-              </Route>
-            </>
+            {currentUser ?
+              <Switch>
+                <Route exact path="/companies">
+                  <CompanyList />
+                </Route>
+                <Route path="/companies/:handle">
+                  <CompanyDetail />
+                </Route>
+                <Route exact path="/jobs">
+                  <JobList />
+                </Route>
+                <Route path="/jobs/:id">
+                  <JobDetail />
+                </Route>
+              </Switch>
             :
-            <Redirect to="/" />
+              <Redirect to="/" />
             }
           </Switch>
         </main>

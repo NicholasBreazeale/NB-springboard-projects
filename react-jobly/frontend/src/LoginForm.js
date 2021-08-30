@@ -1,10 +1,18 @@
 import React from "react";
 import { Button, Input, InputGroup } from "reactstrap";
 import FormStack from "./FormStack";
+import { useHistory } from "react-router-dom";
 
 function LoginForm({ formSubmition }) {
+  const history = useHistory();
+
+  const handleSubmit = async data => {
+    await formSubmition(data);
+    history.push("/");
+  }
+
   return (
-  <FormStack initialState={{ username: "", password: "" }} formSubmition={formSubmition}>
+  <FormStack initialState={{ username: "", password: "" }} formSubmition={handleSubmit}>
     <label htmlFor="username">Username</label>
     <InputGroup>
       <Input type="text" id="username" name="username" />
