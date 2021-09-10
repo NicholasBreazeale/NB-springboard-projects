@@ -17,28 +17,83 @@ class BinaryTree {
    * the length of the shortest path from the root to a leaf. */
 
   minDepth() {
+    function callback(node) {
+      // Leaf node found
+      if (node.left === null && node.right === null) return 1;
 
+      // Search other nodes
+      let depth = Infinity;
+      if (node.left !== null) depth = callback(node.left);
+      if (node.right !== null) {
+        const d = callback(node.right);
+        if (depth > d) depth = d;
+      }
+
+      // Increment depth
+      return depth + 1;
+    }
+    return (this.root === null ? 0 : callback(this.root));
   }
 
   /** maxDepth(): return the maximum depth of the tree -- that is,
    * the length of the longest path from the root to a leaf. */
 
   maxDepth() {
+    function callback(node) {
+      // Leaf node found
+      if (node.left === null && node.right === null) return 1;
 
+      // Search other nodes
+      let depth = Infinity;
+      if (node.left !== null) depth = callback(node.left);
+      if (node.right !== null) {
+        const d = callback(node.right);
+        if (depth < d) depth = d;
+      }
+
+      // Increment depth
+      return depth + 1;
+    }
+    return (this.root === null ? 0 : callback(this.root));
   }
 
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
    * The path doesn't need to start at the root, but you can't visit a node more than once. */
 
   maxSum() {
+    let max = -Infinity;
+    function callback(node) {
+      const left = (node.left === null ? 0 : callback(node.left));
+      const right = (node.right === null ? 0 : callback(node.right));
 
+      const oneBranchSum = (left > right ? left : right) + node.val;
+      const twoBranchSum = left + right + node.val;
+      max = (oneBranchSum > twoBranchSum ? oneBranchSum : twoBranchSum);
+
+      return oneBranchSum;
+    }
+
+    if (this.root === null) return 0;
+
+    callback(this.root);
+    return max;
   }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
    * which is larger than lowerBound. Return null if no such value exists. */
 
   nextLarger(lowerBound) {
+    function callback(node) {
+      let next = (node.val > lowerBound ? node.val : Infinity);
 
+      for (const child of [node.left, node.right]) {
+        if (child === null) continue;
+        const n = callback(child);
+        if (n !== null && next > n) next = n;
+      }
+      return (next === Infinity ? null : next);
+    }
+    return (this.root === null ? null : callback(this.root));
   }
 
   /** Further study!
